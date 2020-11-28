@@ -1,0 +1,13 @@
+.booksearch {
+    margin: 20px;
+    border-bottom: 2px solid black;
+    text-align: center;
+}
+
+form {
+    margin-bottom: 15px;
+}
+
+button {
+    margin: 5px;
+}

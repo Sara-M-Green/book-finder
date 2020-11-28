@@ -1,25 +1,75 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import BookSearch from './BookSearch/BookSearch';
+import Filter from './Filter/Filter';
+import Results from './Results/Results';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      books: [],
+      searchQuery: "quilting"
+    };
+  }
+
+  handleSubmit = (e, userInput) => {
+    e.preventDefault();
+    this.setState({
+      searchQuery: userInput
+    });
+    this.componentDidMount();
+  }
+
+  componentDidMount() {
+    const query = this.state.searchQuery
+    const apiKey='AIzaSyB24GtWdpmkpvgUr4pjvudj4Xgd6mnOYi0';
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}`
+    
+    fetch(url)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("Something went wrong. Try again later")
+        }
+        return res
+      })
+      .then(res => res.json())
+      .then(data => {
+        const resultArray = data.items.map(item => {
+          return ({
+            image: item.volumeInfo.imageLinks.thumbnail,
+            title: item.volumeInfo.title,
+            author: item.volumeInfo.authors,
+            description: item.volumeInfo.description
+          })
+
+        })
+        this.setState({
+          books: resultArray,
+          error: null
+        });
+      })
+      .catch(err => {
+        this.setState({
+          error: err.message
+        })
+      })
+  }
+
+  render() {
+    return (
+      <div className="app">
+        <header>
+          <h1>Google Book Search</h1>
+        </header>
+        <main>
+          <BookSearch handleSubmit={this.handleSubmit}/>
+          <Filter />
+          <Results resultList={this.state.books}/>
+        </main>
+      </div>
+    )
+  }
 }
 
 export default App;
