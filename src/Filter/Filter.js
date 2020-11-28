@@ -6,19 +6,11 @@ class Filter extends Component {
         return (
             <div className="filters">
                 <label>Print Type:</label>
-                <select>
-                    <option>All</option>
-                    <option>Book</option>
-                    <option>Magazine</option>
+                <select onChange={e => this.props.handlePrintType(e.target.value)}>
+                    <option value="all">All</option>
+                    <option value ="books">Book</option>
+                    <option value="magazines">Magazine</option>
                 </select>
-
-                <label>Book Type:</label>
-                <select>
-                    <option>All</option>
-                    <option>All E-Books</option>
-                    <option>Free E-Books</option>
-                    <option>Paid E-Books</option>
-                </select> 
             </div>
         );
     }

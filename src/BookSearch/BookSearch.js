@@ -20,12 +20,13 @@ class BookSearch extends Component {
             <div className="booksearch">
                 <form 
                     className="booksearch__form"
-                    onClick={ submitEvent => this.props.handleSubmit(submitEvent, this.state.searchQuery)}>
+                    onSubmit={ submitEvent => this.props.handleSubmit(submitEvent, this.state.searchQuery)}>
                     <label htmlFor="search">Search: </label>
                     <input 
                         type="text"
                         name="search"
                         id="search"
+                        placeholder="Search for a book"
                         onChange={e => this.updateSearchQuery(e.target.value)}
                         ></input>
                     <button 

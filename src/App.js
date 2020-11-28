@@ -9,7 +9,9 @@ class App extends Component {
     super(props);
     this.state = {
       books: [],
-      searchQuery: "quilting"
+      searchQuery: "",
+      printType: 'all',
+      error: null
     };
   }
 
@@ -21,10 +23,17 @@ class App extends Component {
     this.componentDidMount();
   }
 
+  handlePrintType = (printType) => {
+    this.setState({
+      printType: printType
+    })
+  }
+
   componentDidMount() {
     const query = this.state.searchQuery
     const apiKey='AIzaSyB24GtWdpmkpvgUr4pjvudj4Xgd6mnOYi0';
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}`
+    const printType = this.state.printType
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}&printType=${printType}`
     
     fetch(url)
       .then(res => {
@@ -35,6 +44,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         const resultArray = data.items.map(item => {
           return ({
             image: item.volumeInfo.imageLinks.thumbnail,
@@ -64,8 +74,8 @@ class App extends Component {
         </header>
         <main>
           <BookSearch handleSubmit={this.handleSubmit}/>
-          <Filter />
-          <Results resultList={this.state.books}/>
+          <Filter handlePrintType={this.handlePrintType} />
+          <Results resultList={this.state.books} error={this.state.error}/>
         </main>
       </div>
     )
